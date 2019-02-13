@@ -9,6 +9,8 @@ import com.wavefront.sdk.entities.metrics.WavefrontMetricSender;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -42,7 +44,7 @@ public class WavefrontDropwizardReporter {
     this.dropwizardMetricsReporter = dropwizardMetricsReporter;
     this.reportingIntervalSeconds = reportingIntervalSeconds;
     heartbeaterService = new HeartbeaterService(wavefrontMetricSender, applicationTags,
-        DROPWIZARD_COMPONENT, source);
+        Collections.singletonList(DROPWIZARD_COMPONENT), source);
   }
 
   /**
