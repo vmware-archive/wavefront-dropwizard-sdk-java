@@ -1,6 +1,6 @@
 open_source_licenses.txt
 
-Wavefront by VMware Dropwizard SDK for Java 0.9.3 GA
+Wavefront by VMware Dropwizard SDK for Java 0.9.4 GA
 
 ======================================================================
 
@@ -29,7 +29,7 @@ SECTION 1: Apache License, V2.0
 
    >>> com.fasterxml.jackson.core:jackson-annotations-2.9.0
    >>> com.fasterxml.jackson.core:jackson-core-2.9.9
-   >>> com.fasterxml.jackson.core:jackson-databind-2.9.9
+   >>> com.fasterxml.jackson.core:jackson-databind-2.9.9.3
    >>> com.tdunning:t-digest-3.2
    >>> io.dropwizard.metrics:metrics-core-4.0.3
    >>> io.dropwizard.metrics:metrics-jvm-4.0.3
@@ -105,7 +105,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 
 
 
->>> com.fasterxml.jackson.core:jackson-databind-2.9.9
+>>> com.fasterxml.jackson.core:jackson-databind-2.9.9.3
 
 # Jackson JSON processor
 
@@ -393,7 +393,8 @@ asserted against, such Contributor by reason of your accepting any such
 warranty or additional liability.
 
 END OF TERMS AND CONDITIONS 
-
+
+
 --------------- SECTION 2: Creative Commons Attribution 2.5  -----------
 
 CREATIVE COMMONS CORPORATION IS NOT A LAW FIRM AND DOES NOT PROVIDE LEGAL SERVICES. DISTRIBUTION OF THIS LICENSE DOES NOT CREATE AN ATTORNEY-CLIENT RELATIONSHIP. CREATIVE COMMONS PROVIDES THIS INFORMATION ON AN "AS-IS" BASIS. CREATIVE COMMONS MAKES NO WARRANTIES REGARDING THE INFORMATION PROVIDED, AND DISCLAIMS LIABILITY FOR DAMAGES RESULTING FROM ITS USE.
@@ -477,4 +478,4 @@ Source Files is valid for three years from the date you acquired or last used th
 Software product. Alternatively, the Source Files may accompany the
 VMware service.
 
-[WAVEFRONTDROPWIZARDSDKJAVA093GANT061919]
+[WAVEFRONTDROPWIZARDSDKJAVA094GATR090319]
