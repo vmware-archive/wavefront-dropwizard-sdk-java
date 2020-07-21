@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import javax.annotation.Nullable;
 
@@ -34,9 +33,6 @@ import static com.wavefront.sdk.dropwizard.Constants.DROPWIZARD_COMPONENT;
  * @author Sushant Dewan (sushant@wavefront.com).
  */
 public class WavefrontDropwizardReporter {
-
-  private static final Logger logger =
-      Logger.getLogger(WavefrontDropwizardReporter.class.getCanonicalName());
 
   private final DropwizardMetricsReporter dropwizardMetricsReporter;
   private final int reportingIntervalSeconds;
