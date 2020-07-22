@@ -19,8 +19,10 @@ import javax.annotation.Nullable;
 import static com.wavefront.sdk.common.Constants.APPLICATION_TAG_KEY;
 import static com.wavefront.sdk.common.Constants.CLUSTER_TAG_KEY;
 import static com.wavefront.sdk.common.Constants.NULL_TAG_VAL;
+import static com.wavefront.sdk.common.Constants.SDK_METRIC_PREFIX;
 import static com.wavefront.sdk.common.Constants.SERVICE_TAG_KEY;
 import static com.wavefront.sdk.common.Constants.SHARD_TAG_KEY;
+import static com.wavefront.sdk.common.Utils.getSemVer;
 import static com.wavefront.sdk.dropwizard.Constants.DROPWIZARD_COMPONENT;
 
 /**
@@ -32,26 +34,41 @@ import static com.wavefront.sdk.dropwizard.Constants.DROPWIZARD_COMPONENT;
 public class WavefrontDropwizardReporter {
 
   private final DropwizardMetricsReporter dropwizardMetricsReporter;
+  private final DropwizardMetricsReporter sdkMetricsReporter;
   private final int reportingIntervalSeconds;
   private final HeartbeaterService heartbeaterService;
 
+  @Deprecated
   private WavefrontDropwizardReporter(DropwizardMetricsReporter dropwizardMetricsReporter,
                                       int reportingIntervalSeconds,
                                       WavefrontMetricSender wavefrontMetricSender,
                                       ApplicationTags applicationTags,
                                       String source) {
+    this(dropwizardMetricsReporter, null, reportingIntervalSeconds, wavefrontMetricSender,
+        applicationTags, source);
+  }
+
+  private WavefrontDropwizardReporter(DropwizardMetricsReporter dropwizardMetricsReporter,
+                                      DropwizardMetricsReporter sdkMetricsReporter,
+                                      int reportingIntervalSeconds,
+                                      WavefrontMetricSender wavefrontMetricSender,
+                                      ApplicationTags applicationTags,
+                                      String source) {
     this.dropwizardMetricsReporter = dropwizardMetricsReporter;
+    this.sdkMetricsReporter = sdkMetricsReporter;
     this.reportingIntervalSeconds = reportingIntervalSeconds;
     heartbeaterService = new HeartbeaterService(wavefrontMetricSender, applicationTags,
         Collections.singletonList(DROPWIZARD_COMPONENT), source);
   }
-
   /**
    * Start the Dropwizard reporter so that it can periodically report data about your Dropwizard
    * application to Wavefront.
    */
   public void start() {
     dropwizardMetricsReporter.start(reportingIntervalSeconds, TimeUnit.SECONDS);
+    if (sdkMetricsReporter != null) {
+      sdkMetricsReporter.start(1, TimeUnit.MINUTES);
+    }
   }
 
   /**
@@ -60,6 +77,9 @@ public class WavefrontDropwizardReporter {
   public void stop() {
     dropwizardMetricsReporter.stop();
     heartbeaterService.close();
+    if (sdkMetricsReporter != null) {
+      sdkMetricsReporter.stop();
+    }
   }
 
   public static class Builder {
@@ -138,8 +158,17 @@ public class WavefrontDropwizardReporter {
       DropwizardMetricsReporter dropwizardMetricsReporter = DropwizardMetricsReporter.forRegistry
           (metricRegistry).prefixedWith(prefix).withSource(source).withReporterPointTags
           (pointTags).build(wavefrontSender);
-      return new WavefrontDropwizardReporter(dropwizardMetricsReporter, reportingIntervalSeconds,
-          wavefrontSender, applicationTags, source);
+
+      MetricRegistry sdkMetricRegistry = new MetricRegistry();
+      DropwizardMetricsReporter sdkMetricsReporter = DropwizardMetricsReporter.forRegistry
+          (sdkMetricRegistry).prefixedWith(SDK_METRIC_PREFIX + ".wavefront_dropwizard.reporter").
+          withSource(source).withReporterPointTags(pointTags).build(wavefrontSender);
+
+      double sdkVersion = getSemVer();
+      sdkMetricRegistry.gauge("version", () -> (() -> sdkVersion));
+
+      return new WavefrontDropwizardReporter(dropwizardMetricsReporter, sdkMetricsReporter,
+          reportingIntervalSeconds, wavefrontSender, applicationTags, source);
     }
   }
 }
