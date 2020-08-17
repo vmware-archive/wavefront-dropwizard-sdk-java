@@ -22,7 +22,7 @@ import static com.wavefront.sdk.common.Constants.NULL_TAG_VAL;
 import static com.wavefront.sdk.common.Constants.SDK_METRIC_PREFIX;
 import static com.wavefront.sdk.common.Constants.SERVICE_TAG_KEY;
 import static com.wavefront.sdk.common.Constants.SHARD_TAG_KEY;
-import static com.wavefront.sdk.common.Utils.getSemVer;
+import static com.wavefront.sdk.common.Utils.getSemVerGauge;
 import static com.wavefront.sdk.dropwizard.Constants.DROPWIZARD_COMPONENT;
 
 /**
@@ -164,7 +164,7 @@ public class WavefrontDropwizardReporter {
           (sdkMetricRegistry).prefixedWith(SDK_METRIC_PREFIX + ".wavefront_dropwizard.reporter").
           withSource(source).withReporterPointTags(pointTags).build(wavefrontSender);
 
-      double sdkVersion = getSemVer();
+      double sdkVersion = getSemVerGauge("wavefront-dropwizard-sdk-java");
       sdkMetricRegistry.gauge("version", () -> (() -> sdkVersion));
 
       return new WavefrontDropwizardReporter(dropwizardMetricsReporter, sdkMetricsReporter,
